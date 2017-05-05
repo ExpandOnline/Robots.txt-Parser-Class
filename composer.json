@@ -1,5 +1,5 @@
 {
-  "name": "t1gor/robots-txt-parser",
+  "name": "ExpandOnline/robots-txt-parser",
   "description": "PHP class to parse robots.txt rules according to Google, Yandex, W3C and The Web Robots Pages specifications.",
   "keywords": [
     "robots.txt",
