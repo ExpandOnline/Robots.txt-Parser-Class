@@ -81,14 +81,18 @@ class RobotsTxtParser
     // robots.txt file content
     private $content = '';
 
-    /**
-     * Constructor
-     *
-     * @param string $content - file content
-     * @param string $encoding - encoding
-     */
-    public function __construct($content, $encoding = self::DEFAULT_ENCODING)
+    private $fallbackToWildcard;
+
+	/**
+	 * Constructor
+	 *
+	 * @param string $content  - file content
+	 * @param string $encoding - encoding
+	 * @param bool   $fallbackToWildcard
+	 */
+    public function __construct($content, $encoding = self::DEFAULT_ENCODING, $fallbackToWildcard = true)
     {
+    	$this->fallbackToWildcard = $fallbackToWildcard;
         // convert encoding
         $encoding = !empty($encoding) ? $encoding : mb_detect_encoding($content);
         mb_internal_encoding($encoding);
@@ -659,7 +663,6 @@ class RobotsTxtParser
             $current = end($this->userAgent_groups);
             $this->userAgent_groups[] = substr($current, 0, strrpos($current, '-'));
         }
-        $this->userAgent_groups[] = '*';
         $this->userAgent_groups = array_unique($this->userAgent_groups);
         $this->determineUserAgentGroup();
     }
@@ -691,7 +694,11 @@ class RobotsTxtParser
                 return;
             }
         }
-        $this->userAgent_match = '*';
+        if ($this->fallbackToWildcard) {
+			$this->userAgent_match = '*';
+			return;
+		}
+		$this->userAgent_match = $this->userAgent_groups[0];
     }
 
     /**
